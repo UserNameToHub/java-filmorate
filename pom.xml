@@ -12,7 +12,8 @@
 	<artifactId>filmorate</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>filmorate</name>
-	<description>Проект сервиса, который будет работать с фильмами и оценками пользователей, а также возвращать топ-5 фильмов, рекомендованных к просмотру.</description>
+	<description>Проект сервиса, который будет работать с фильмами и оценками пользователей,
+		а также возвращать топ-5 фильмов, рекомендованных к просмотру.</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -26,6 +27,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
 		</dependency>
 	</dependencies>
 
