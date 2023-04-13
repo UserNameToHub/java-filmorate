@@ -33,6 +33,10 @@ public class UserController {
             return user;
         }
 
+        if (checkUserName(user.getName())) {
+            user.setName(user.getLogin());
+        }
+
         users.put(user.getId(), user);
         log.info("Пользователь был добавлен в базу.");
         return user;
@@ -59,5 +63,13 @@ public class UserController {
     @ExceptionHandler(ValidationException.class)
     public void handleException(ValidationException e) {
         throw new ValidationException(e.getMessage());
+    }
+
+    private boolean checkUserName(String name) {
+        if (Objects.isNull(name) || name.isBlank()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

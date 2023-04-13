@@ -32,7 +32,7 @@ public class User {
     public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;
         this.login = login;
-        this.name = (Objects.isNull(name) || name.isBlank())?login:name;
+        this.name = name;
         this.birthday = birthday;
         this.id = this.hashCode();
     }
