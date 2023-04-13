@@ -7,7 +7,8 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Objects;
 
-@Getter @Setter
+@Getter
+@Setter
 @EqualsAndHashCode
 @ToString
 public class User {

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
-import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.time.DurationMin;
 import ru.yandex.practicum.filmorate.deserializer.CustomDurationDeserializer;
 import ru.yandex.practicum.filmorate.validation.annotation.ReleaseDateConstraint;
@@ -14,7 +13,8 @@ import javax.validation.constraints.*;
 import java.time.Duration;
 import java.time.LocalDate;
 
-@Getter @Setter
+@Getter
+@Setter
 @EqualsAndHashCode
 @ToString
 public class Film {
