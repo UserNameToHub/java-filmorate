@@ -5,7 +5,6 @@ import ru.yandex.practicum.filmorate.validation.annotation.SpaceConstraint;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Getter
 @Setter
