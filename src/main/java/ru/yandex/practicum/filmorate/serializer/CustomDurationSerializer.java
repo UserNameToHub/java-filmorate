@@ -10,10 +10,11 @@ import java.time.Duration;
 
 @Slf4j
 public class CustomDurationSerializer extends JsonSerializer<Duration> {
+
     @Override
     public void serialize(Duration duration, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
             throws IOException {
-        log.info("start custom serializer");
+        log.info("Start custom serializer for Duration.");
         jsonGenerator.writeNumber(duration.toMinutes());
     }
 }

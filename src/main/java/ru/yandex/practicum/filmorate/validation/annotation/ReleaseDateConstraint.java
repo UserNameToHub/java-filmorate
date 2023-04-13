@@ -1,6 +1,6 @@
-package ru.yandex.practicum.filmorate.validate.annotation;
+package ru.yandex.practicum.filmorate.validation.annotation;
 
-import ru.yandex.practicum.filmorate.validate.validator.ReleaseDateConstraintValidator;
+import ru.yandex.practicum.filmorate.validation.validator.ReleaseDateConstraintValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -13,7 +13,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ReleaseDateConstraintValidator.class)
 public @interface ReleaseDateConstraint {
-    String value();
+//    String value();
+    String from();
 
     String message() default "{value.negative}";
 

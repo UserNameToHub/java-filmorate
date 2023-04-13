@@ -1,22 +1,25 @@
-package ru.yandex.practicum.filmorate.validate.validator;
+package ru.yandex.practicum.filmorate.validation.validator;
 
-import ru.yandex.practicum.filmorate.validate.annotation.ReleaseDateConstraint;
+import lombok.extern.slf4j.Slf4j;
+import ru.yandex.practicum.filmorate.validation.annotation.ReleaseDateConstraint;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+@Slf4j
 public class ReleaseDateConstraintValidator implements ConstraintValidator<ReleaseDateConstraint, LocalDate> {
     private String verificationDate;
 
     @Override
     public void initialize(ReleaseDateConstraint constraintAnnotation) {
-        this.verificationDate = constraintAnnotation.value();
+        verificationDate = constraintAnnotation.from();
     }
 
     @Override
     public boolean isValid(LocalDate localDate, ConstraintValidatorContext constraintValidatorContext) {
-        return localDate.isAfter(LocalDate.parse(verificationDate, DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        log.info("Start validator for release date.");
+        return localDate.isAfter(LocalDate.parse(verificationDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
     }
 }

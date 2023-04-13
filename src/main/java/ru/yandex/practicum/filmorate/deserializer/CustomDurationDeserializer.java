@@ -13,11 +13,10 @@ import java.time.Duration;
 @Slf4j
 @JsonComponent
 public class CustomDurationDeserializer extends JsonDeserializer<Duration> {
-
     @Override
     public Duration deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
             throws IOException, JacksonException {
-        log.info("start custom deserialize for Duration");
+        log.info("Start custom deserialize for Duration.");
         return Duration.ofMinutes(Long.parseLong(jsonParser.getText()));
     }
 }

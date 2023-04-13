@@ -7,31 +7,30 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.time.DurationMin;
 import ru.yandex.practicum.filmorate.deserializer.CustomDurationDeserializer;
-import ru.yandex.practicum.filmorate.validate.annotation.ReleaseDateConstraint;
+import ru.yandex.practicum.filmorate.validation.annotation.ReleaseDateConstraint;
 import ru.yandex.practicum.filmorate.serializer.CustomDurationSerializer;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
 import java.time.Duration;
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Getter @Setter
 @EqualsAndHashCode
 @ToString
-//@Builder
 public class Film {
 
     @EqualsAndHashCode.Exclude
     private final int id;
 
-    @NotBlank(message = "Название не может быть пустым")
+    @NotEmpty(message = "Название не может быть пустым")
+    @NotNull(message = "Название не может быть пустым")
     private String name;
 
-    @Length(max = 200, message = "Максимальная длина описания — 200 символов.")
+    @Size(max = 200, message = "Максимальная длина описания — 200 символов.")
     private String description;
 
-    @JsonFormat(pattern = "dd.MM.yyyy")
-    @ReleaseDateConstraint(value = "28.12.1895", message = "Дата релиза — не раньше 28 декабря 1895 года.")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @ReleaseDateConstraint(from = "1895-12-28", message = "Дата релиза — не раньше 28 декабря 1895 года.")
     private LocalDate releaseDate;
 
     @JsonDeserialize(using = CustomDurationDeserializer.class)
