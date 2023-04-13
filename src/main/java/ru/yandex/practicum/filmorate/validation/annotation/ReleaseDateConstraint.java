@@ -13,7 +13,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ReleaseDateConstraintValidator.class)
 public @interface ReleaseDateConstraint {
-//    String value();
     String from();
 
     String message() default "{value.negative}";
