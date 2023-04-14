@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +23,7 @@ public class UserController {
     @GetMapping
     public List<User> findAll() {
         log.info("Запрос на получение всех пользователей из базы.");
-        return users.entrySet().stream()
-                .map(k -> k.getValue())
-                .collect(Collectors.toList());
+        return users.values().stream().collect(Collectors.toList());
     }
 
     @PostMapping
@@ -35,7 +34,7 @@ public class UserController {
             return user;
         }
 
-        if (checkUserName(user.getName())) {
+        if (!checkUserName(user.getName())) {
             user.setName(user.getLogin());
         }
 
@@ -68,10 +67,6 @@ public class UserController {
     }
 
     private boolean checkUserName(String name) {
-        if (Objects.isNull(name) || name.isBlank()) {
-            return true;
-        } else {
-            return false;
-        }
+        return StringUtils.isNotBlank(name);
     }
 }

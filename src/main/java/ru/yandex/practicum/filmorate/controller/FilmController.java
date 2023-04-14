@@ -23,9 +23,7 @@ public class FilmController {
     @GetMapping
     public List<Film> findAll() {
         log.info("Зпрос на получение всех фильмов из базы.");
-        return films.entrySet().stream()
-                .map(k -> k.getValue())
-                .collect(Collectors.toList());
+        return films.values().stream().collect(Collectors.toList());
     }
 
     @PostMapping
