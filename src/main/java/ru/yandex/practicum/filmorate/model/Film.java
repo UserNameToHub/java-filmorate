@@ -13,14 +13,11 @@ import javax.validation.constraints.*;
 import java.time.Duration;
 import java.time.LocalDate;
 
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@Data
+@Builder
 public class Film {
-
-    @EqualsAndHashCode.Exclude
-    private final int id;
+    @NotNull(message = "Id не может быть пустым.")
+    private int id;
 
     @NotEmpty(message = "Название не может быть пустым")
     @NotNull(message = "Название не может быть пустым")
@@ -37,12 +34,4 @@ public class Film {
     @JsonSerialize(using = CustomDurationSerializer.class)
     @DurationMin(nanos = 1, message = "Продолжительность фильма не может быть меньше или равно нулю.")
     private Duration duration;
-
-    public Film(String name, String description, LocalDate releaseDate, Duration duration) {
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-        this.id = this.hashCode();
-    }
 }

@@ -6,13 +6,11 @@ import ru.yandex.practicum.filmorate.validation.annotation.SpaceConstraint;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@Data
+@Builder
 public class User {
-    @EqualsAndHashCode.Exclude
-    private final int id;
+    @NotNull(message = "Id не может быть пустым.")
+    private int id;
 
     @NotBlank
     @Email(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = "Неверный формат электронной почты.")
@@ -27,12 +25,4 @@ public class User {
 
     @PastOrPresent
     private LocalDate birthday;
-
-    public User(String email, String login, String name, LocalDate birthday) {
-        this.email = email;
-        this.login = login;
-        this.name = name;
-        this.birthday = birthday;
-        this.id = this.hashCode();
-    }
 }

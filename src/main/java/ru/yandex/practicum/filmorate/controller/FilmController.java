@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class FilmController {
 
     private final HashMap<Integer, Film> films = new HashMap<>();
+    private int id = 1;
 
     @GetMapping
     public List<Film> findAll() {
@@ -29,6 +30,7 @@ public class FilmController {
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
+        film.setId(id++);
         if (films.containsKey(film.getId())) {
             log.info("Фильм с id {} уже есть в базе.", film.getId());
             return film;

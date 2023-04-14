@@ -27,8 +27,13 @@ class UserControllerTest {
 
     @BeforeEach
     private void initUser() {
-        user = new User("test@yandex.ru", "loginTest", "nameTest",
-                LocalDate.of(1990, 02, 07));
+        user = User.builder()
+                .id(1)
+                .email("test@yandex.ru")
+                .login("loginTest")
+                .name("nameTest")
+                .birthday(LocalDate.of(1990, 02, 07))
+                .build();
     }
 
     // POST
@@ -131,7 +136,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(1))
+                .andExpect(jsonPath("$.size()").value(2))
                 .andDo(print());
     }
 }

@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final Map<Integer, User> users = new HashMap<>();
+    private int id = 1;
 
     @GetMapping
     public List<User> findAll() {
@@ -28,6 +29,7 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user) {
+        user.setId(id++);
         if (users.containsKey(user.getId())) {
             log.info("Пользователь с id {} уже есть в базе.", user.getId());
             return user;

@@ -30,9 +30,14 @@ class FilmControllerTest {
 
     @BeforeEach
     private void init() {
-        film = new Film("Dune: Part One", "Наследник знаменитого дома Атрейдесов Пол отправляется " +
-                "вместе с семьей на одну из самых опасных планет во Вселенной — Арракис.",
-                LocalDate.of(2021, 9, 16), Duration.ofMinutes(155));
+        film = Film.builder()
+                .id(1)
+                .name("Dune: Part One")
+                .description("Наследник знаменитого дома Атрейдесов Пол отправляется " +
+                        "вместе с семьей на одну из самых опасных планет во Вселенной — Арракис.")
+                .releaseDate(LocalDate.of(2021, 9, 16))
+                .duration(Duration.ofMinutes(155))
+                .build();
     }
 
     // POST
@@ -135,9 +140,14 @@ class FilmControllerTest {
     // GET
     @Test
     public void shouldGetStatus200ForGETWhenFilmsSizeIs2() throws Exception {
-        Film mk = new Film("Mortal Kombat", "Боец смешанных единоборств Коул Янг не " +
-                "раз соглашался проиграть за деньги. ", LocalDate.of(2021, 05, 07),
-                Duration.ofMinutes(110));
+        Film mk = Film.builder()
+                .id(1)
+                .name("Mortal Kombat")
+                .description("Боец смешанных единоборств Коул Янг не " +
+                        "раз соглашался проиграть за деньги. ")
+                .releaseDate(LocalDate.of(2021, 05, 07))
+                .duration(Duration.ofMinutes(110))
+                .build();
 
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
