@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.serializer.CustomDurationSerializer;
 import javax.validation.constraints.*;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @Builder
@@ -34,4 +35,6 @@ public class Film {
     @JsonSerialize(using = CustomDurationSerializer.class)
     @DurationMin(nanos = 1, message = "Продолжительность фильма не может быть меньше или равно нулю.")
     private Duration duration;
+
+    private final Set<Long> likes;
 }

@@ -5,6 +5,7 @@ import ru.yandex.practicum.filmorate.validation.annotation.SpaceConstraint;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @Builder
@@ -25,4 +26,6 @@ public class User {
 
     @PastOrPresent
     private LocalDate birthday;
+
+    private final Set<Long> friends;
 }
