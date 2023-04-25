@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Builder
 public class Film {
     @NotNull(message = "Id не может быть пустым.")
-    private int id;
+    private Integer id;
 
     @NotEmpty(message = "Название не может быть пустым")
     @NotNull(message = "Название не может быть пустым")

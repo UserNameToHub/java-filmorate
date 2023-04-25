@@ -27,6 +27,7 @@ public class UserController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public User create(@Valid @RequestBody User user) {
         user.setId(id++);
         if (users.containsKey(user.getId())) {

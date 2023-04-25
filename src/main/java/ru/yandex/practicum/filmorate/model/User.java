@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Builder
 public class User {
     @NotNull(message = "Id не может быть пустым.")
-    private int id;
+    private Integer id;
 
     @NotBlank
     @Email(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = "Неверный формат электронной почты.")
