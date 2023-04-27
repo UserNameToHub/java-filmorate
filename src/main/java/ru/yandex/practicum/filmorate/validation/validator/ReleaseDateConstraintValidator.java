@@ -19,7 +19,7 @@ public class ReleaseDateConstraintValidator implements ConstraintValidator<Relea
 
     @Override
     public boolean isValid(LocalDate localDate, ConstraintValidatorContext constraintValidatorContext) {
-        log.info("Start validator for release date.");
+        log.debug("Start validator for release date.");
         return localDate.isAfter(LocalDate.parse(verificationDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
     }
 }

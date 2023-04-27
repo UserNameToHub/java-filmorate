@@ -5,8 +5,8 @@ import java.util.Optional;
 
 public interface CrudRepository<T> {
     Collection<T> findAll();
-    Optional<T> findById(Integer id);
-    Optional<T> create(T type);
-    Optional<T> update(T type);
-    void delete(Integer id);
+    Optional<T> findById(Long id);
+    T create(T type);
+    T update(T type);
+    void delete(Long id);
 }
