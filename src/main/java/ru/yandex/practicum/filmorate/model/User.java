@@ -5,13 +5,13 @@ import ru.yandex.practicum.filmorate.validation.annotation.SpaceConstraint;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Builder
 public class User {
-    @NotNull(message = "Id не может быть пустым.")
-    private Integer id;
+    private Long id;
 
     @NotBlank
     @Email(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = "Неверный формат электронной почты.")
@@ -27,5 +27,5 @@ public class User {
     @PastOrPresent
     private LocalDate birthday;
 
-    private final Set<Long> friends;
+    private final Set<Long> friends = new HashSet<>();
 }

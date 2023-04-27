@@ -12,13 +12,13 @@ import ru.yandex.practicum.filmorate.serializer.CustomDurationSerializer;
 import javax.validation.constraints.*;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Builder
 public class Film {
-    @NotNull(message = "Id не может быть пустым.")
-    private Integer id;
+    private Long id;
 
     @NotEmpty(message = "Название не может быть пустым")
     @NotNull(message = "Название не может быть пустым")
@@ -36,5 +36,5 @@ public class Film {
     @DurationMin(nanos = 1, message = "Продолжительность фильма не может быть меньше или равно нулю.")
     private Duration duration;
 
-    private final Set<Long> likes;
+    private final Set<Long> likes = new HashSet<>();
 }
