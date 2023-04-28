@@ -17,7 +17,7 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
     private final InMemoryUserRepository userRepository;
 
-    private Long idU = 1l;
+    private Long idU = 1L;
 
     @Autowired
     public UserServiceImpl(InMemoryUserRepository userRepository) {
