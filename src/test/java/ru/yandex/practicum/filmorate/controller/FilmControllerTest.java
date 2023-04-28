@@ -154,7 +154,7 @@ class FilmControllerTest {
     @Test
     public void shouldGetStatus200ForGETWhenFilmsSizeIs2() throws Exception {
         Film mk = Film.builder()
-                .id(1l)
+                .id(1L)
                 .name("Mortal Kombat")
                 .description("Боец смешанных единоборств Коул Янг не " +
                         "раз соглашался проиграть за деньги. ")
