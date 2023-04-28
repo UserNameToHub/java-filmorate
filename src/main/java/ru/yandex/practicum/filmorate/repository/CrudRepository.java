@@ -7,15 +7,11 @@ public interface CrudRepository<T> {
 
     Collection<T> findAll();
 
-
     Optional<T> findById(Long id);
-
 
     T create(T type);
 
-
     T update(T type);
-
 
     void delete(Long id);
 }
