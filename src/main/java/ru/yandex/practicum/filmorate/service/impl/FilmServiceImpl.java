@@ -18,7 +18,9 @@ import java.util.Objects;
 @Service
 public class FilmServiceImpl implements FilmService {
     private final InMemoryFilmRepository filmRepository;
+
     private final UserServiceImpl userService;
+
     private Long idF = 1l;
 
     @Autowired

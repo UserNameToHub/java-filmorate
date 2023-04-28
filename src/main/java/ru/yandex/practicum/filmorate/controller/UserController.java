@@ -13,7 +13,6 @@ import java.util.*;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
     private final UserServiceImpl userService;
 
     @Autowired
