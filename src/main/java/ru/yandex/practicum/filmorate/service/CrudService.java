@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public interface CrudService<T> {
     Collection<T> findAll();
