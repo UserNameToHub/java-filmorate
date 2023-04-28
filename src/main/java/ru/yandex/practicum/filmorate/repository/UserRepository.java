@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface UserRepository extends CrudRepository<User> {
+
     void addFriend(Long id, Long friendId);
 
     void deleteFriend(Long id, Long friendId);
@@ -13,4 +14,5 @@ public interface UserRepository extends CrudRepository<User> {
     List<User> findAllFriends(Long id);
 
     List<User> findCommonFriends(Long id, Long otherId);
+
 }

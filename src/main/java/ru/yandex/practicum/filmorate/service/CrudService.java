@@ -9,4 +9,5 @@ public interface CrudService<T> {
     T create(T type);
     T update(T type);
     void delete(Long id);
+
 }
