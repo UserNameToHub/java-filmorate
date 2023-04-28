@@ -36,7 +36,7 @@ class UserControllerTest {
     @BeforeEach
     private void initUser() {
         user = User.builder()
-                .id(1l)
+                .id(1L)
                 .email("test@yandex.ru")
                 .login("loginTest")
                 .name("nameTest")
@@ -44,7 +44,7 @@ class UserControllerTest {
                 .build();
 
         user2 = User.builder()
-                .id(2l)
+                .id(2L)
                 .email("test2@yandex.ru")
                 .login("loginTest2")
                 .name("nameTest2")
@@ -52,7 +52,7 @@ class UserControllerTest {
                 .build();
 
         user3 = User.builder()
-                .id(3l)
+                .id(3L)
                 .email("test3@yandex.ru")
                 .login("loginTest3")
                 .name("nameTest3")

@@ -41,7 +41,7 @@ class FilmControllerTest {
     @BeforeEach
     private void init() {
         film = Film.builder()
-                .id(1l)
+                .id(1L)
                 .name("Dune: Part One")
                 .description("Наследник знаменитого дома Атрейдесов Пол отправляется " +
                         "вместе с семьей на одну из самых опасных планет во Вселенной — Арракис.")
@@ -184,7 +184,7 @@ class FilmControllerTest {
     @Test
     public void shouldGetStatus200ForPUTWhenFilmAndUserAreCorrect() throws Exception {
         createDB(film);
-        createUser(2l);
+        createUser(2L);
         mockMvc.perform(put("/films/{id}/like/{userId}", 1, 2)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -201,7 +201,7 @@ class FilmControllerTest {
     @Test
     public void shouldGetStatus200AndSize1And0WhenAddedFilmAndUser() throws Exception {
         createDB(film);
-        createUser(2l);
+        createUser(2L);
 
         mockMvc.perform(put("/films/{id}/like/{userId}", 1, 2)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -224,7 +224,7 @@ class FilmControllerTest {
     @Test
     public void shouldGetStatus200AndSize1ForPOSTWhenPassedParamWas1() throws Exception {
         createDB(film);
-        createUser(2l);
+        createUser(2L);
 
         mockMvc.perform(put("/films/{id}/like/{userId}", 1, 2)
                         .contentType(MediaType.APPLICATION_JSON))
