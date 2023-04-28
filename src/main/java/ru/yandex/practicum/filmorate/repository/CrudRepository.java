@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface CrudRepository<T> {
-
     Collection<T> findAll();
 
     Optional<T> findById(Long id);
@@ -14,5 +13,4 @@ public interface CrudRepository<T> {
     T update(T type);
 
     void delete(Long id);
-
 }
