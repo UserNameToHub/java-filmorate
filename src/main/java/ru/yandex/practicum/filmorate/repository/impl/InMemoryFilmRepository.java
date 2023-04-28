@@ -58,4 +58,8 @@ public class InMemoryFilmRepository implements FilmRepository {
                 .limit(count)
                 .collect(Collectors.toList());
     }
+
+    public void clearDB() {
+        IN_MEMORY_DB.clear();
+    }
 }

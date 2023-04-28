@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.MyAppException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.repository.FilmRepository;
+import ru.yandex.practicum.filmorate.repository.impl.InMemoryFilmRepository;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.Arrays;
@@ -17,12 +17,14 @@ import java.util.Objects;
 @Slf4j
 @Service
 public class FilmServiceImpl implements FilmService {
-    private final FilmRepository filmRepository;
+    private final InMemoryFilmRepository filmRepository;
+    private final UserServiceImpl userService;
     private Long idF = 1l;
 
     @Autowired
-    public FilmServiceImpl(FilmRepository filmRepository) {
+    public FilmServiceImpl(InMemoryFilmRepository filmRepository, UserServiceImpl userService) {
         this.filmRepository = filmRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -62,6 +64,7 @@ public class FilmServiceImpl implements FilmService {
     public void addLike(Long id, Long userId) {
         checkPathVarsForNull(id, userId);
         checkFilmById(id);
+        checkUserById(userId);
         filmRepository.addLike(id, userId);
         log.info("Пользователь с id {} поставил лайк фильму с id {}.", userId, id);
     }
@@ -69,7 +72,8 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public void deleteLike(Long id, Long userId) {
         checkPathVarsForNull(id, userId);
-        checkFilmById(id, userId);
+        checkFilmById(id);
+        checkUserById(userId);
         filmRepository.deleteLike(id, userId);
         log.info("Пользователь с id {} удалил лайк фильму с id {}.", userId, id);
     }
@@ -84,6 +88,12 @@ public class FilmServiceImpl implements FilmService {
             filmRepository.findById(id).orElseThrow(() ->
                     new MyAppException("404", String.format("Фильм с id %d не найден.", id),
                             HttpStatus.NOT_FOUND));
+        }
+    }
+
+    private void checkUserById(Long... ids) {
+        for (Long id : ids) {
+            userService.findById(id);
         }
     }
 

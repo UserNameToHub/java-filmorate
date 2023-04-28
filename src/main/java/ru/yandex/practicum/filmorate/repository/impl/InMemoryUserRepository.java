@@ -75,4 +75,8 @@ public class InMemoryUserRepository implements UserRepository {
                 .map(IN_MEMORY_DB::get)
                 .collect(Collectors.toList());
     }
+
+    public void clearDB() {
+        IN_MEMORY_DB.clear();
+    }
 }
