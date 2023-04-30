@@ -26,17 +26,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Collection<User> findAll() {
+        log.info("Запрос на получение списка всех пользователей из базы.");
         return userRepository.findAll();
     }
 
     @Override
     public User findById(Long id) {
+        log.info("Запрос на получение пользователя c id {}.", id);
         return userRepository.findById(id).orElseThrow(() ->
                 new MyAppException("404", String.format("Пользователь с id %d не найден", id), HttpStatus.NOT_FOUND));
     }
 
     @Override
     public User create(User type) {
+        log.info("Запрос на создание пользователя.");
         type.setId(idU++);
         if (userRepository.findById(type.getId()).isPresent()) {
             throw new MyAppException("400", String.format("Пользователь с id %d уже есть в базе.", type.getId()),
@@ -52,18 +55,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User type) {
+        log.info("Запрос на обновление пользователя.");
         checkUserById(type.getId());
         return userRepository.update(type);
     }
 
     @Override
     public void delete(Long id) {
+        log.info("Запрос на удаление пользователя.");
         checkUserById(id);
         userRepository.delete(id);
     }
 
     @Override
     public void addFriend(Long id, Long friendId) {
+        log.info("Запрос на добавление друга.");
         checkPathVarsForNull(id, friendId);
         checkUserById(id, friendId);
         userRepository.addFriend(id, friendId);
@@ -72,6 +78,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteFriend(Long id, Long friendId) {
+        log.info("Запрос на удаление друга.");
         checkPathVarsForNull(id, friendId);
         checkUserById(id, friendId);
         userRepository.addFriend(id, friendId);
@@ -80,6 +87,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAllFriendsForUser(Long id) {
+        log.info("Запрос на список друзей пользователя с id {}.", id);
         checkPathVarsForNull(id);
         checkUserById(id);
         return userRepository.findAllFriends(id);
@@ -87,6 +95,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findCommonFriends(Long id, Long otherId) {
+        log.info("Запрос на список друзей пользователя с id {}, общих с пользователем с id {}.", id, otherId);
         checkPathVarsForNull(id, otherId);
         checkUserById(id, otherId);
         return userRepository.findCommonFriends(id, otherId);
