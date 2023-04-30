@@ -62,4 +62,8 @@ public class InMemoryFilmRepository implements FilmRepository {
     public void clearDB() {
         IN_MEMORY_DB.clear();
     }
+
+    public boolean existsById(Long id) {
+        return IN_MEMORY_DB.containsKey(id);
+    }
 }

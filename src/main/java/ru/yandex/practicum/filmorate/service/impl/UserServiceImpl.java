@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.MyAppException;
@@ -14,15 +14,11 @@ import java.util.*;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final InMemoryUserRepository userRepository;
 
     private Long idU = 1L;
-
-    @Autowired
-    public UserServiceImpl(InMemoryUserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public Collection<User> findAll() {
@@ -41,7 +37,7 @@ public class UserServiceImpl implements UserService {
     public User create(User type) {
         log.info("Запрос на создание пользователя.");
         type.setId(idU++);
-        if (userRepository.findById(type.getId()).isPresent()) {
+        if (userRepository.existsById(type.getId())) {
             throw new MyAppException("400", String.format("Пользователь с id %d уже есть в базе.", type.getId()),
                     HttpStatus.BAD_REQUEST);
         }
@@ -101,11 +97,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findCommonFriends(id, otherId);
     }
 
-    private void checkUserById(Long... ids) {
+    public void checkUserById(Long... ids) {
         for (Long id : ids) {
-            userRepository.findById(id).orElseThrow(() ->
-                    new MyAppException("404", String.format("Пользователь с id %d не найден", id),
-                            HttpStatus.NOT_FOUND));
+            if (!userRepository.existsById(id)) {
+                throw new MyAppException("404", String.format("Пользователь с id %d не найден", id),
+                        HttpStatus.NOT_FOUND);
+            }
         }
     }
 

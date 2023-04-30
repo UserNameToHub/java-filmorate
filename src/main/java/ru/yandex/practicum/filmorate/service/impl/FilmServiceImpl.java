@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.MyAppException;
@@ -16,18 +16,13 @@ import java.util.Objects;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
     private final InMemoryFilmRepository filmRepository;
 
     private final UserServiceImpl userService;
 
     private Long idF = 1L;
-
-    @Autowired
-    public FilmServiceImpl(InMemoryFilmRepository filmRepository, UserServiceImpl userService) {
-        this.filmRepository = filmRepository;
-        this.userService = userService;
-    }
 
     @Override
     public Collection<Film> findAll() {
@@ -46,7 +41,7 @@ public class FilmServiceImpl implements FilmService {
     public Film create(Film type) {
         log.info("Запрос на создание фильма.");
         type.setId(idF++);
-        if (filmRepository.findById(type.getId()).isPresent()) {
+        if (filmRepository.existsById(type.getId())) {
             throw new MyAppException("400", String.format("Фильм с id %d уже есть в базе.", type.getId()),
                     HttpStatus.BAD_REQUEST);
         }
@@ -95,16 +90,15 @@ public class FilmServiceImpl implements FilmService {
 
     private void checkFilmById(Long... ids) {
         for (Long id : ids) {
-            filmRepository.findById(id).orElseThrow(() ->
-                    new MyAppException("404", String.format("Фильм с id %d не найден.", id),
-                            HttpStatus.NOT_FOUND));
+            if (!filmRepository.existsById(id)) {
+                throw new MyAppException("404", String.format("Фильм с id %d не найден.", id),
+                        HttpStatus.NOT_FOUND);
+            }
         }
     }
 
     private void checkUserById(Long... ids) {
-        for (Long id : ids) {
-            userService.findById(id);
-        }
+            userService.checkUserById(ids);
     }
 
     private void checkPathVarsForNull(Long... pathVars) {
