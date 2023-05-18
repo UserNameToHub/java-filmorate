@@ -37,7 +37,7 @@ public class Film {
     @DurationMin(nanos = 1, message = "Продолжительность фильма не может быть меньше или равно нулю.")
     private Duration duration;
 
-    private Rating rating;
+    private String rating;
 
     private final Set<Category> genres = new HashSet<>();
 
