@@ -1,4 +1,12 @@
-insert into categories(id, name)
+delete from FILM_LIKES;
+delete from USERS;
+delete from USER_FRIENDS;
+delete from genres;
+delete from FILM_GENRES;
+delete from FILMS;
+delete from RATING;
+
+insert into GENRES(id, name)
 values (1, 'Комедия'),
        (2, 'Драма'),
        (3, 'Мультфильм'),
@@ -17,7 +25,7 @@ values (1, 'G'),
        (4, 'R'),
        (5, 'NC-17');
 
-insert into films(id, name, description, release_date, duration, rating_id)
+insert into films(id, name, description, release_date, duration, mpa)
 values (1, 'Дюна', 'Наследник знаменитого дома Атрейдесов Пол отправляется вместе с семьей на одну ' ||
         'из самых опасных планет во Вселенной — Арракис...', '2021-09-16', 155, 1),
         -- фантастика, боевик, драма, приключения
@@ -49,7 +57,7 @@ values (1, 'user1@yandex.ru', 'user1', 'user1', '1993-03-09'),
        (9, 'user9@yandex.ru', 'user9', 'user9', '1990-01-01'),
        (10, 'user10@yandex.ru', 'user10', 'user110', '1996-11-10');
 
-insert into film_categories(film_id, category_id)
+insert into FILM_GENRES(film_id, GENRE_ID)
 values (1, 7),
        (1, 6),
        (1, 2),
@@ -87,9 +95,9 @@ values (1, 1),
        (5, 6),
        (5, 9);
 
-insert into user_friends(user_id, other_user_id, is_confirm)
-values (1, 10, True),
-       (1, 8, True),
-       (8, 2, FALSE),
-       (10, 3, True),
-       (3, 8, true);
+insert into user_friends(user_id, friend_id)
+values (1, 10),
+       (1, 8),
+       (8, 2),
+       (10, 3),
+       (3, 8);
