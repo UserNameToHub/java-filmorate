@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.MyAppException;
@@ -41,6 +42,7 @@ public class FilmServiceImpl implements FilmService {
     public Film create(Film type) {
         log.info("Запрос на создание фильма.");
         type.setId(idF++);
+
         if (filmRepository.existsById(type.getId())) {
             throw new MyAppException("400", String.format("Фильм с id %d уже есть в базе.", type.getId()),
                     HttpStatus.BAD_REQUEST);
