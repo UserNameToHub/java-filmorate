@@ -6,7 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import org.hibernate.validator.constraints.time.DurationMin;
 import ru.yandex.practicum.filmorate.deserializer.CustomDurationDeserializer;
-import ru.yandex.practicum.filmorate.model.enumeration.Rating;
+import ru.yandex.practicum.filmorate.model.enumeration.Genre;
+import ru.yandex.practicum.filmorate.model.enumeration.Mpa;
 import ru.yandex.practicum.filmorate.validation.annotation.ReleaseDateConstraint;
 import ru.yandex.practicum.filmorate.serializer.CustomDurationSerializer;
 
@@ -14,6 +15,7 @@ import javax.validation.constraints.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Data
@@ -37,9 +39,9 @@ public class Film {
     @DurationMin(nanos = 1, message = "Продолжительность фильма не может быть меньше или равно нулю.")
     private Duration duration;
 
-    private String rating;
+    private Mpa mpa;
 
-    private final Set<Category> genres = new HashSet<>();
+    private final Set<Genre> genres = new LinkedHashSet<>();
 
     private final Set<Long> likes = new HashSet<>();
 }
