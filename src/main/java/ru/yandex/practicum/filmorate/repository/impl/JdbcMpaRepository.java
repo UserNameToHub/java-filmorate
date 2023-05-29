@@ -52,6 +52,7 @@ public class JdbcMpaRepository implements MpaRepository {
         String sqlUpdate = "update rating set name = ? " +
                 "where id = ?";
         jdbcTemplate.update(sqlUpdate, type.getName());
+        log.info("Рейтинг с id-{} был обновлен.", type.getId());
         return type;
     }
 

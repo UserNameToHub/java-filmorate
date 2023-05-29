@@ -64,6 +64,7 @@ public class JdbcFilmRepository implements FilmRepository {
         categoryMapper.reverseMapRow(type.getGenres(), createdId, jdbcTemplate);
         likeMapper.reverseMapRow(type.getLikes(), createdId, jdbcTemplate);
 
+        log.info("фильм с id - {} создан.", createdId);
         return type;
     }
 
@@ -75,6 +76,8 @@ public class JdbcFilmRepository implements FilmRepository {
         jdbcTemplate.update(sqlUpdateFilm, type.getName(), type.getDescription(), type.getReleaseDate(),
                 type.getDuration().toMinutes(), type.getMpa().getId(), type.getId());
         categoryMapper.reverseMapRow(type.getGenres(), type.getId(), jdbcTemplate);
+
+        log.info("фильм с id - {} обновлен.", type.getId());
         return type;
     }
 
@@ -83,6 +86,7 @@ public class JdbcFilmRepository implements FilmRepository {
         existsById(id);
         String sql = "delete from films where id = ?";
         jdbcTemplate.update(sql, id);
+        log.info("фильм с id - {} удален.", id);
     }
 
     @Override
@@ -92,6 +96,7 @@ public class JdbcFilmRepository implements FilmRepository {
         String sql = "insert into film_likes(film_id, user_id)" +
                 "values(?, ?)";
         jdbcTemplate.update(sql, idFilm, userId);
+        log.info("Лайк от пользователя с id-{}  добавлен фильму с id-{}.", userId, idFilm);
     }
 
     @Override
@@ -100,15 +105,11 @@ public class JdbcFilmRepository implements FilmRepository {
         userRepository.existsById(userId);
         String sql = "delete from film_likes where film_id = ? and user_id = ?";
         jdbcTemplate.update(sql, idFilm, userId);
+        log.info("Пользователя с id-{}  удалил лайк фильму с id-{}.", userId, idFilm);
     }
 
     @Override
     public List<Film> findFirstCountFilms(Integer count) {
-        String sql = "select f.name, COUNT(fl.user_id) as count_likes " +
-                "from films as f inner join film_likes as fl on f.ID = fl.film_id " +
-                "group by film_id " +
-                "order by count_likes desc " +
-                "limit ?";
         String sqlSelectFirst = "select f.* " +
                 "from films as f left join FILM_GENRES FG on f.id = fg.film_id " +
                 "group by f.id " +

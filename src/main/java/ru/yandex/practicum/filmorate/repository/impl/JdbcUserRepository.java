@@ -65,6 +65,7 @@ public class JdbcUserRepository implements UserRepository {
         String sql = "update users set email = ? , login = ?, name = ?, birthday = ? " +
                 "where id = ?";
         jdbcTemplate.update(sql, type.getEmail(), type.getLogin(), type.getName(), type.getBirthday(), type.getId());
+        log.info("Информация о пользователе с id-{} была обновлена.", type.getId());
         return type;
     }
 
