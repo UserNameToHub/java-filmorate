@@ -29,7 +29,7 @@ public class FilmMapper implements RowMapper<Film> {
                 .description(rs.getString("description"))
                 .releaseDate(rs.getDate("release_date").toLocalDate())
                 .duration(Duration.ofMinutes(rs.getLong("duration")))
-                .mpa(Mpa.forValues(rs.getInt("id")))
+                .mpa(Mpa.forValues(rs.getInt("mpa")))
                 .build();
 
         Set<Genre> genres = film.getGenres();
