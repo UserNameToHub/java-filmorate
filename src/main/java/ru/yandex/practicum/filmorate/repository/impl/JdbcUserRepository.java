@@ -2,10 +2,12 @@ package ru.yandex.practicum.filmorate.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.MyAppException;
 import ru.yandex.practicum.filmorate.mapper.FriendMapper;
 import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.User;
@@ -33,7 +35,7 @@ public class JdbcUserRepository implements UserRepository {
     public Optional<User> findById(Long id) {
         String sqlSelectAll = "select * from users " +
                 "where id = ?";
-        List<User> results = jdbcTemplate.query(sqlSelectAll, userMapper::mapRow);
+        List<User> results = jdbcTemplate.query(sqlSelectAll, userMapper::mapRow, id);
         return results.size() == 0 ? Optional.empty() : Optional.of(results.get(0));
     }
 
@@ -44,7 +46,7 @@ public class JdbcUserRepository implements UserRepository {
                 .usingGeneratedKeyColumns("id");
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("email", type.getName());
+        parameters.put("email", type.getEmail());
         parameters.put("login", type.getLogin());
         parameters.put("name", type.getName());
         parameters.put("birthday", type.getBirthday());
@@ -78,7 +80,8 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public void addFriend(Long id, Long friendId) {
         existsById(id);
-        String sql = "insert into user_friends(user_id, other_user_id) " +
+        existsById(friendId);
+        String sql = "insert into user_friends(user_id, friend_id) " +
                 "values (?, ?)";
         jdbcTemplate.update(sql, id, friendId);
         log.info("Друзья c id {} и id {} были добавлены.");
@@ -87,19 +90,21 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public void deleteFriend(Long id, Long friendId) {
         existsById(id);
-        String sql = "delete from user_friends where user_id = ? AND other_user_id = ?";
+        existsById(friendId);
+        String sql = "delete from user_friends where user_id = ? AND friend_id = ?";
         jdbcTemplate.update(sql, id, friendId);
+        jdbcTemplate.update(sql, friendId, id);
         log.info("Друзья c id {} и id {} были добавлены.");
     }
 
     @Override
     public List<User> findAllFriends(Long id) {
         String sql = "select * " +
-                "from users as o " +
-                "where o.id in(" +
-                "select u.other_user_id " +
-                "from user_friends as u " +
-                "where u.user_id = ?)";
+                "from users " +
+                "where id in(" +
+                "select friend_id " +
+                "from user_friends " +
+                "where user_id = ?)";
         return jdbcTemplate.query(sql, userMapper::mapRow, id);
     }
 
@@ -107,17 +112,20 @@ public class JdbcUserRepository implements UserRepository {
     public List<User> findCommonFriends(Long id, Long otherId) {
         String sql = "select * from users as u " +
                 "where u.id in (" +
-                "select other_user_id " +
+                "select friend_id " +
                 "from user_friends as uf " +
-                "where (uf.user_id = ? or uf.user_id = ?) and uf.is_confirm = true " +
-                "group by uf.other_user_id " +
-                "having count(uf.other_user_id) > 1)";
+                "where (uf.user_id = ? or uf.user_id = ?) " +
+                "group by uf.friend_id " +
+                "having count(uf.friend_id) > 1)";
         return jdbcTemplate.query(sql, userMapper::mapRow, id, otherId);
     }
 
-    public boolean existsById(Long id) {
-        String sql = "select * from users where id = ?";
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet(sql, id);
-        return userRows.next();
+    public void existsById(long id) {
+        String sql = "select id from users where id = ?";
+        SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sql, id);
+        if (!filmRows.next()) {
+            log.info("Пользователь с id {} не найден.");
+            throw new MyAppException("404", String.format("Пользователь с id {} не найден.", id), HttpStatus.NOT_FOUND);
+        }
     }
 }

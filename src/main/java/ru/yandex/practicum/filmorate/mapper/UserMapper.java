@@ -27,7 +27,7 @@ public class UserMapper implements RowMapper<User> {
                 .build();
 
         Set<Long> friends = user.getFriends();
-        String sqlSelectAllFriend = "select * from user_friends " +
+        String sqlSelectAllFriend = "select friend_id from user_friends " +
                 "where user_id = ?";
         friends.addAll(jdbcTemplate.query(sqlSelectAllFriend, friendMapper::mapRow, user.getId()));
 

@@ -1,29 +1,21 @@
 package ru.yandex.practicum.filmorate.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.MyAppException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.repository.FilmRepository;
-import ru.yandex.practicum.filmorate.repository.impl.InMemoryFilmRepository;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Service("jdbcFilmService")
-//@RequiredArgsConstructor
 public class JdbcFilmService implements FilmService {
-
     private final FilmRepository filmRepository;
-
 
     public JdbcFilmService(@Qualifier("jdbcFilmRepository") FilmRepository filmRepository) {
         this.filmRepository = filmRepository;

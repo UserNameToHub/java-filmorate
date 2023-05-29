@@ -16,9 +16,10 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class FilmMapper implements RowMapper<Film> {
-    private final MpaRatingMapper mpaRatingMapper;
     private final GenreMapper genreMapper;
+
     private final JdbcTemplate jdbcTemplate;
+
     private final LikeMapper likeMapper;
 
     @Override
