@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,16 +8,13 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.MyAppException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
-import ru.yandex.practicum.filmorate.repository.impl.InMemoryUserRepository;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.*;
 
 @Slf4j
 @Service("jdbcUserService")
-//@RequiredArgsConstructor
 public class JdbcUserService implements UserService {
-
     private final UserRepository userRepository;
 
     public JdbcUserService(@Qualifier("jdbcUserRepository") UserRepository userRepository) {
@@ -69,7 +65,7 @@ public class JdbcUserService implements UserService {
     @Override
     public void deleteFriend(Long id, Long friendId) {
         log.info("Запрос на удаление друга.");
-        userRepository.addFriend(id, friendId);
+        userRepository.deleteFriend(id, friendId);
         log.info("Пользователь с id {} был удален из друзей.", friendId);
     }
 

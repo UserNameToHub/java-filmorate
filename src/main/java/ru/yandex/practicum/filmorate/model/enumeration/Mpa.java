@@ -12,21 +12,21 @@ import java.util.Arrays;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @RequiredArgsConstructor
 public enum Mpa {
-        G(1, "G"),
-        PG(2, "PG"),
-        PG13(3,"PG-13"),
-        R(4, "R"),
-        NC17(5, "NC-17"),
-        UNKNOWN(6, "Unknown");
+    G(1, "G"),
+    PG(2, "PG"),
+    PG13(3, "PG-13"),
+    R(4, "R"),
+    NC17(5, "NC-17"),
+    UNKNOWN(6, "Unknown");
 
-        private final int id;
-        private final String name;
+    private final int id;
+    private final String name;
 
-        @JsonCreator
-        public static Mpa forValues(@JsonProperty("id") int id) {
-             return Arrays.stream(Mpa.values())
-                     .filter(e -> e.id == id)
-                     .findFirst()
-                     .orElse(Mpa.UNKNOWN);
-        }
+    @JsonCreator
+    public static Mpa forValues(@JsonProperty("id") int id) {
+        return Arrays.stream(Mpa.values())
+                .filter(e -> e.id == id)
+                .findFirst()
+                .orElse(Mpa.UNKNOWN);
+    }
 }
