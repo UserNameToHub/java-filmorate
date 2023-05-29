@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.filmorate.exception.MyAppException;
 import ru.yandex.practicum.filmorate.mapper.GenreMapper;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
@@ -22,9 +21,14 @@ import java.util.*;
 @RequiredArgsConstructor
 public class JdbcFilmRepository implements FilmRepository {
     private final JdbcTemplate jdbcTemplate;
+
     private final FilmMapper filmMapper;
+
     private final GenreMapper categoryMapper;
+
     private final LikeMapper likeMapper;
+
+    private final JdbcUserRepository userRepository;
 
     @Override
     public Collection<Film> findAll() {
@@ -38,11 +42,10 @@ public class JdbcFilmRepository implements FilmRepository {
                 "from films " +
                 "where id = ?";
         List<Film> results = jdbcTemplate.query(sql, filmMapper::mapRow, id);
-        return results.size() == 0? Optional.empty(): Optional.of(results.get(0));
+        return results.size() == 0 ? Optional.empty() : Optional.of(results.get(0));
     }
 
     @Override
-    @Transactional
     public Film create(Film type) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("films")
@@ -71,6 +74,7 @@ public class JdbcFilmRepository implements FilmRepository {
                 "where id = ?";
         jdbcTemplate.update(sqlUpdateFilm, type.getName(), type.getDescription(), type.getReleaseDate(),
                 type.getDuration().toMinutes(), type.getMpa().getId(), type.getId());
+        categoryMapper.reverseMapRow(type.getGenres(), type.getId(), jdbcTemplate);
         return type;
     }
 
@@ -84,6 +88,7 @@ public class JdbcFilmRepository implements FilmRepository {
     @Override
     public void addLike(Long idFilm, Long userId) {
         existsById(idFilm);
+        userRepository.existsById(userId);
         String sql = "insert into film_likes(film_id, user_id)" +
                 "values(?, ?)";
         jdbcTemplate.update(sql, idFilm, userId);
@@ -92,6 +97,7 @@ public class JdbcFilmRepository implements FilmRepository {
     @Override
     public void deleteLike(Long idFilm, Long userId) {
         existsById(idFilm);
+        userRepository.existsById(userId);
         String sql = "delete from film_likes where film_id = ? and user_id = ?";
         jdbcTemplate.update(sql, idFilm, userId);
     }
@@ -103,7 +109,12 @@ public class JdbcFilmRepository implements FilmRepository {
                 "group by film_id " +
                 "order by count_likes desc " +
                 "limit ?";
-        return jdbcTemplate.query(sql, filmMapper::mapRow, count);
+        String sqlSelectFirst = "select f.* " +
+                "from films as f left join FILM_GENRES FG on f.id = fg.film_id " +
+                "group by f.id " +
+                "order by count(fg.genre_id) desc " +
+                "limit ?";
+        return jdbcTemplate.query(sqlSelectFirst, filmMapper::mapRow, count);
     }
 
     private void existsById(long id) {
@@ -111,7 +122,7 @@ public class JdbcFilmRepository implements FilmRepository {
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sql, id);
         if (!filmRows.next()) {
             log.info("Фильма с id {} не найден.");
-            throw new MyAppException("404", String.format("Фильм с id d% не найден." ,id), HttpStatus.NOT_FOUND);
+            throw new MyAppException("404", String.format("Фильм с id {} не найден.", id), HttpStatus.NOT_FOUND);
         }
     }
 }
