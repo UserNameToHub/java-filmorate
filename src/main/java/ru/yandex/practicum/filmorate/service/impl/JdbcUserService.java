@@ -59,14 +59,12 @@ public class JdbcUserService implements UserService {
     public void addFriend(Long id, Long friendId) {
         log.info("Запрос на добавление друга.");
         userRepository.addFriend(id, friendId);
-        log.info("Пользователь с id {} был добавлен в друзья.", friendId);
     }
 
     @Override
     public void deleteFriend(Long id, Long friendId) {
         log.info("Запрос на удаление друга.");
-        userRepository.deleteFriend(id, friendId);
-        log.info("Пользователь с id {} был удален из друзей.", friendId);
+        userRepository.deleteFriend(id, friendId);;
     }
 
     @Override

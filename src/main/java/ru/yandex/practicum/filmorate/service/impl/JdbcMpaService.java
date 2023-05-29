@@ -22,27 +22,32 @@ public class JdbcMpaService implements MpaService {
 
     @Override
     public Collection<Mpa> findAll() {
+        log.info("Запрос на получение списка всех рейтингов из базы.");
         return mpaRepository.findAll();
     }
 
     @Override
     public Mpa findById(Long id) {
+        log.info("Запрос на получение рейтинг c id {}.", id);
         return mpaRepository.findById(id).orElseThrow(() ->
                 new MyAppException("404", String.format("Рейтинг с id %d не найден.", id), HttpStatus.NOT_FOUND));
     }
 
     @Override
     public Mpa create(Mpa type) {
+        log.info("Запрос на создание рейтинга.");
         return mpaRepository.create(type);
     }
 
     @Override
     public Mpa update(Mpa type) {
+        log.info("Запрос на обновление рейтинга.");
         return mpaRepository.update(type);
     }
 
     @Override
     public void delete(Long id) {
+        log.info("Запрос на удаление рейтинга.");
         mpaRepository.delete(id);
     }
 }

@@ -63,7 +63,6 @@ public class JdbcFilmService implements FilmService {
     public void deleteLike(Long id, Long userId) {
         log.info("Запрос на удаление лайка.");
         filmRepository.deleteLike(id, userId);
-        log.info("Пользователь с id {} удалил лайк фильму с id {}.", userId, id);
     }
 
     @Override

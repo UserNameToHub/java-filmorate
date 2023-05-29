@@ -22,27 +22,32 @@ public class JdbcGenreService implements GenreService {
 
     @Override
     public Collection<Genre> findAll() {
+        log.info("Запрос на получение списка всех жанров из базы.");
         return genreRepository.findAll();
     }
 
     @Override
     public Genre findById(Long id) {
+        log.info("Запрос на получение жанра c id {}.", id);
         return genreRepository.findById(id).orElseThrow(() ->
                 new MyAppException("404", String.format("Жанр с id %d не найден.", id), HttpStatus.NOT_FOUND));
     }
 
     @Override
     public Genre create(Genre type) {
+        log.info("Запрос на создание жанра.");
         return genreRepository.create(type);
     }
 
     @Override
     public Genre update(Genre type) {
+        log.info("Запрос на обновление жанра.");
         return genreRepository.update(type);
     }
 
     @Override
     public void delete(Long id) {
+        log.info("Запрос на удаление жанра.");
         genreRepository.delete(id);
     }
 }
