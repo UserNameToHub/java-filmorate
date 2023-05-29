@@ -17,11 +17,13 @@ public class GenreMapper implements RowMapper<Genre> {
     }
 
     public void reverseMapRow(Set<Genre> genres, Long id, JdbcTemplate jdbcTemplate) {
+        String sqlDelete = "delete from film_genres where film_id = ?";
         String sqlInsert = "insert into film_genres(film_id, genre_id) " +
                 "values(?, ?)";
+        jdbcTemplate.update(sqlDelete, id);
         if (!genres.isEmpty()) {
             genres.stream().forEach(e -> {
-                jdbcTemplate.update(sqlInsert, id, 1);
+                jdbcTemplate.update(sqlInsert, id, e.getId());
             });
         }
     }
