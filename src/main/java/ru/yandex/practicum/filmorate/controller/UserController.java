@@ -1,72 +1,67 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.impl.UserServiceImpl;
 
 import javax.validation.Valid;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
+    private final UserServiceImpl userService;
 
-    private final Map<Integer, User> users = new HashMap<>();
-    private int id = 1;
+    @Autowired
+    public UserController(UserServiceImpl userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
-    public List<User> findAll() {
-        log.info("Запрос на получение всех пользователей из базы.");
-        return users.values().stream().collect(Collectors.toList());
+    public Collection<User> findAll() {
+        return userService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public User getById(@PathVariable("id") long id) {
+        return userService.findById(id);
     }
 
     @PostMapping
     public User create(@Valid @RequestBody User user) {
-        user.setId(id++);
-        if (users.containsKey(user.getId())) {
-            log.info("Пользователь с id {} уже есть в базе.", user.getId());
-            return user;
-        }
-
-        if (!checkUserName(user.getName())) {
-            user.setName(user.getLogin());
-        }
-
-        users.put(user.getId(), user);
-        log.info("Пользователь был добавлен в базу.");
-        return user;
+        return userService.create(user);
     }
 
     @PutMapping
     public User update(@Valid @RequestBody User user) {
-        if (!users.containsKey(user.getId())) {
-            log.warn("Пользователя с id {} еще нет в базе.", user.getId());
-            throw new ValidationException(String.format("Пользователь c id %d еще не добавлен в базу.", user.getId()));
-        }
-        users.put(user.getId(), user);
-        log.info("Пользователь с id {} был изменен в базе.", user.getId());
-        return user;
+        return userService.update(user);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ValidationException handleException(MethodArgumentNotValidException e) {
-        return new ValidationException(e.getMessage());
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") long id) {
+        userService.delete(id);
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(ValidationException.class)
-    public void handleException(ValidationException e) {
-        throw new ValidationException(e.getMessage());
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable("id") long id, @PathVariable("friendId") long friendId) {
+        userService.addFriend(id, friendId);
     }
 
-    private boolean checkUserName(String name) {
-        return StringUtils.isNotBlank(name);
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void deleteFriend(@PathVariable("id") long id, @PathVariable("friendId") long friendId) {
+        userService.deleteFriend(id, friendId);
+    }
+
+    @GetMapping("/{id}/friends")
+    public List<User> getAllFriendsForUser(@PathVariable("id") long id) {
+        return userService.findAllFriendsForUser(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@PathVariable("id") long id, @PathVariable("otherId") long otherId) {
+        return userService.findCommonFriends(id, otherId);
     }
 }
