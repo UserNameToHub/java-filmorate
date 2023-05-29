@@ -29,7 +29,7 @@ class JdbcFilmServiceTest {
         assertThat(filmOptional)
                 .isPresent()
                 .hasValueSatisfying(film ->
-                        assertThat(film).hasFieldOrPropertyWithValue("id", 1l));
+                        assertThat(film).hasFieldOrPropertyWithValue("id", 1L));
     }
 
     @Test
