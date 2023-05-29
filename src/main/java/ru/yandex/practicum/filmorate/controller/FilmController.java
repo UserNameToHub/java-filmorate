@@ -13,7 +13,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/films")
-//@RequiredArgsConstructor
 public class FilmController {
     private final FilmService filmService;
 
