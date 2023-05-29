@@ -12,7 +12,7 @@ import java.util.Set;
 public class FriendMapper implements RowMapper<Long> {
     @Override
     public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return rs.getLong("id");
+        return rs.getLong("friend_id");
     }
 
     public void reverseMapRow(Set<Long> likes, Long id, JdbcTemplate jdbcTemplate) {
