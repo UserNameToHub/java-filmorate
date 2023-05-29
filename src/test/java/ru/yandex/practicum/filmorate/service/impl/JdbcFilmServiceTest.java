@@ -25,7 +25,7 @@ class JdbcFilmServiceTest {
 
     @Test
     public void testFindFilmById() {
-        Optional<Film> filmOptional = filmRepository.findById(1l);
+        Optional<Film> filmOptional = filmRepository.findById(1L);
         assertThat(filmOptional)
                 .isPresent()
                 .hasValueSatisfying(film ->
