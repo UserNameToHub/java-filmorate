@@ -64,23 +64,23 @@ class JdbcFilmServiceTest extends AbstractServiceTest {
 
     @Test
     public void testAddLike() throws JsonProcessingException {
-        Film beforeFilm = filmRepository.findById(1l).get();
+        Film beforeFilm = filmRepository.findById(1L).get();
         assertThat(beforeFilm.getLikes().size()).isEqualTo(4);
 
         filmRepository.addLike(1L, 9L);
 
-        Film afterFilm = filmRepository.findById(1l).get();
+        Film afterFilm = filmRepository.findById(1L).get();
         assertThat(afterFilm.getLikes().size()).isEqualTo(5);
     }
 
     @Test
     public void testDeleteLike() throws JsonProcessingException {
-        Film beforeFilm = filmRepository.findById(1l).get();
+        Film beforeFilm = filmRepository.findById(1L).get();
         assertThat(beforeFilm.getLikes().size()).isEqualTo(4);
 
         filmRepository.deleteLike(1L, 10L);
 
-        Film afterFilm = filmRepository.findById(1l).get();
+        Film afterFilm = filmRepository.findById(1L).get();
         assertThat(afterFilm.getLikes().size()).isEqualTo(3);
     }
 

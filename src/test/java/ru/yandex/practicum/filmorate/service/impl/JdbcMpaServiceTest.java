@@ -18,7 +18,7 @@ class JdbcMpaServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindByIdParam() {
-        Optional<Mpa> mpaOptional = mpaRepository.findById(1l);
+        Optional<Mpa> mpaOptional = mpaRepository.findById(1L);
         assertThat(mpaOptional)
                 .isPresent()
                 .hasValueSatisfying(Mpa ->
