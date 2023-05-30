@@ -2,12 +2,10 @@ package ru.yandex.practicum.filmorate.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exception.MyAppException;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.filmorate.mapper.FriendMapper;
 import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.User;
@@ -61,41 +59,32 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public User update(User type) {
-        existsById(type.getId());
         String sql = "update users set email = ? , login = ?, name = ?, birthday = ? " +
                 "where id = ?";
         jdbcTemplate.update(sql, type.getEmail(), type.getLogin(), type.getName(), type.getBirthday(), type.getId());
-        log.info("Информация о пользователе с id-{} была обновлена.", type.getId());
         return type;
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-        existsById(id);
-
         String sqlDelete = "delete from users where id = ?";
         jdbcTemplate.update(sqlDelete, id);
-        log.info("Пользователь с id {} был удален из базы.");
     }
 
     @Override
+    @Transactional
     public void addFriend(Long id, Long friendId) {
-        existsById(id);
-        existsById(friendId);
         String sql = "insert into user_friends(user_id, friend_id) " +
                 "values (?, ?)";
         jdbcTemplate.update(sql, id, friendId);
-        log.info("Друзья c id {} и id {} были добавлены.");
     }
 
     @Override
     public void deleteFriend(Long id, Long friendId) {
-        existsById(id);
-        existsById(friendId);
         String sql = "delete from user_friends where user_id = ? AND friend_id = ?";
         jdbcTemplate.update(sql, id, friendId);
         jdbcTemplate.update(sql, friendId, id);
-        log.info("Друзья c id {} и id {} были добавлены.");
     }
 
     @Override
@@ -121,12 +110,9 @@ public class JdbcUserRepository implements UserRepository {
         return jdbcTemplate.query(sql, userMapper::mapRow, id, otherId);
     }
 
-    public void existsById(long id) {
-        String sql = "select id from users where id = ?";
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sql, id);
-        if (!filmRows.next()) {
-            log.info("Пользователь с id {} не найден.");
-            throw new MyAppException("404", String.format("Пользователь с id {} не найден.", id), HttpStatus.NOT_FOUND);
-        }
+    @Override
+    public boolean existsById(Long id) {
+        String existsQuery = "select exists(select 1 from users where id=?)";
+        return jdbcTemplate.queryForObject(existsQuery, Boolean.class, id);
     }
 }

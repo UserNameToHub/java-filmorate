@@ -12,4 +12,6 @@ public interface UserRepository extends CrudRepository<User> {
     List<User> findAllFriends(Long id);
 
     List<User> findCommonFriends(Long id, Long otherId);
+
+    boolean existsById(Long id);
 }

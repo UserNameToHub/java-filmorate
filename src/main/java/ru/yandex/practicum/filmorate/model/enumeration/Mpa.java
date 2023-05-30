@@ -27,6 +27,6 @@ public enum Mpa {
         return Arrays.stream(Mpa.values())
                 .filter(e -> e.id == id)
                 .findFirst()
-                .orElse(Mpa.UNKNOWN);
+                .orElse(null);
     }
 }

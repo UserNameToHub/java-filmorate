@@ -2,12 +2,9 @@ package ru.yandex.practicum.filmorate.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exception.MyAppException;
 import ru.yandex.practicum.filmorate.mapper.MpaRatingMapper;
 import ru.yandex.practicum.filmorate.model.enumeration.Mpa;
 
@@ -52,27 +49,22 @@ public class JdbcMpaRepository implements MpaRepository {
 
     @Override
     public Mpa update(Mpa type) {
-        existsById(type.getId());
         String sqlUpdate = "update rating set name = ? " +
                 "where id = ?";
         jdbcTemplate.update(sqlUpdate, type.getName());
-        log.info("Рейтинг с id-{} был обновлен.", type.getId());
+
         return type;
     }
 
     @Override
     public void delete(Long id) {
-        existsById(id);
         String sqlDelete = "delete from rating where id = ?";
         jdbcTemplate.update(sqlDelete, id);
     }
 
-    private void existsById(long id) {
-        String sql = "select id from rating where id = ?";
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sql, id);
-        if (!filmRows.next()) {
-            log.info("Жанр с id {} не найден.");
-            throw new MyAppException("404", String.format("Рейтинг с id {} не найден.", id), HttpStatus.NOT_FOUND);
-        }
+    @Override
+    public boolean existsById(long id) {
+        String existsQuery = "select exists(select 1 from rating where id=?)";
+        return jdbcTemplate.queryForObject(existsQuery, Boolean.class, id);
     }
 }

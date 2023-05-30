@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.model.enumeration.Mpa;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Duration;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Component
@@ -33,7 +34,7 @@ public class FilmMapper implements RowMapper<Film> {
                 .mpa(Mpa.forValues(rs.getInt("mpa")))
                 .build();
 
-        Set<Genre> genres = film.getGenres();
+        LinkedHashSet<Genre> genres = film.getGenres();
         Set<Long> likes = film.getLikes();
 
         String sqlAllGenres = "select * from genres " +

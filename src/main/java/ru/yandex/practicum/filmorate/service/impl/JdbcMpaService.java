@@ -42,12 +42,23 @@ public class JdbcMpaService implements MpaService {
     @Override
     public Mpa update(Mpa type) {
         log.info("Запрос на обновление рейтинга.");
+        checkMpaById(type.getId());
+        log.info("Рейтинг с id-{} был обновлен.", type.getId());
         return mpaRepository.update(type);
     }
 
     @Override
     public void delete(Long id) {
+        checkMpaById(id);
         log.info("Запрос на удаление рейтинга.");
         mpaRepository.delete(id);
+        log.info("Рейтинг с id-{} был удален.", id);
+    }
+
+    private void checkMpaById(long id) {
+        if (!mpaRepository.existsById(id)) {
+            throw new MyAppException("404", String.format("Рейтинг с id %d или не найден.", id),
+                    HttpStatus.NOT_FOUND);
+        }
     }
 }

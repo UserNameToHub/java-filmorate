@@ -51,7 +51,6 @@ public class JdbcGenreRepository implements GenreRepository {
 
     @Override
     public Genre update(Genre type) {
-        existsById(type.getId());
         String sqlUpdate = "update genres set name = ? " +
                 "where id = ?";
         jdbcTemplate.update(sqlUpdate, type.getName());
@@ -60,17 +59,13 @@ public class JdbcGenreRepository implements GenreRepository {
 
     @Override
     public void delete(Long id) {
-        existsById(id);
         String sqlDelete = "delete from genres where id = ?";
         jdbcTemplate.update(sqlDelete, id);
     }
 
-    private void existsById(long id) {
-        String sql = "select id from genres where id = ?";
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sql, id);
-        if (!filmRows.next()) {
-            log.info("Жанр с id {} не найден.");
-            throw new MyAppException("404", String.format("Жанр с id {} не найден.", id), HttpStatus.NOT_FOUND);
-        }
+    @Override
+    public boolean existsById(long id) {
+        String existsQuery = "select exists(select 1 from genres where id=?)";
+        return jdbcTemplate.queryForObject(existsQuery, Boolean.class, id);
     }
 }

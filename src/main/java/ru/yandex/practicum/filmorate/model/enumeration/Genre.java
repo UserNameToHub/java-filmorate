@@ -32,6 +32,6 @@ public enum Genre {
         return Arrays.stream(Genre.values())
                 .filter(e -> e.id == id)
                 .findFirst()
-                .orElse(Genre.UNKNOWN);
+                .orElse(null);
     }
 }

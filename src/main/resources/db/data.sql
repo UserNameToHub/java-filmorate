@@ -1,11 +1,11 @@
--- delete from FILM_LIKES;
--- delete from USERS;
--- delete from USER_FRIENDS;
--- delete from genres;
--- delete from FILM_GENRES;
--- delete from FILMS;
--- delete from RATING;
---
+delete from FILM_LIKES;
+delete from USERS;
+delete from USER_FRIENDS;
+delete from genres;
+delete from FILM_GENRES;
+delete from FILMS;
+delete from RATING;
+
 insert into GENRES(id, name)
 values (1, 'Комедия'),
        (2, 'Драма'),

@@ -40,31 +40,40 @@ public class JdbcUserService implements UserService {
         if (!checkUserName(type.getName())) {
             type.setName(type.getLogin());
         }
+        log.info("Пользователе с id-{} был добален в базу.", type.getId());
         return userRepository.create(type);
     }
 
     @Override
     public User update(User type) {
         log.info("Запрос на обновление пользователя.");
+        checkUserById(type.getId());
+        log.info("Информация о пользователе с id-{} была обновлена.", type.getId());
         return userRepository.update(type);
     }
 
     @Override
     public void delete(Long id) {
         log.info("Запрос на удаление пользователя.");
+        checkUserById(id);
         userRepository.delete(id);
+        log.info("Пользователь с id {} был удален из базы.");
     }
 
     @Override
     public void addFriend(Long id, Long friendId) {
         log.info("Запрос на добавление друга.");
+        checkUserById(id, friendId);
         userRepository.addFriend(id, friendId);
+        log.info("Друзья c id {} и id {} были добавлены.");
     }
 
     @Override
     public void deleteFriend(Long id, Long friendId) {
         log.info("Запрос на удаление друга.");
-        userRepository.deleteFriend(id, friendId);;
+        checkUserById(id, friendId);
+        userRepository.deleteFriend(id, friendId);
+        log.info("Друзья c id {} и id {} были добавлены.");
     }
 
     @Override
@@ -81,5 +90,14 @@ public class JdbcUserService implements UserService {
 
     private boolean checkUserName(String name) {
         return StringUtils.isNotBlank(name);
+    }
+
+    private void checkUserById(Long... ids) {
+        for (Long id : ids) {
+            if (!userRepository.existsById(id)) {
+                throw new MyAppException("404", String.format("Пользователь с id %d или не найден.", id),
+                        HttpStatus.NOT_FOUND);
+            }
+        }
     }
 }
