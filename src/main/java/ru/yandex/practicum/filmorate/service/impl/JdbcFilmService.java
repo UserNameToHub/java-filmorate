@@ -1,28 +1,29 @@
 package ru.yandex.practicum.filmorate.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.MyAppException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.repository.impl.InMemoryFilmRepository;
+import ru.yandex.practicum.filmorate.repository.FilmRepository;
+import ru.yandex.practicum.filmorate.repository.UserRepository;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
-@Service
-@RequiredArgsConstructor
-public class FilmServiceImpl implements FilmService {
-    private final InMemoryFilmRepository filmRepository;
+@Service("jdbcFilmService")
+public class JdbcFilmService implements FilmService {
+    private final FilmRepository filmRepository;
+    private final UserRepository userRepository;
 
-    private final UserServiceImpl userService;
-
-    private Long idF = 1L;
+    public JdbcFilmService(@Qualifier("jdbcFilmRepository") FilmRepository filmRepository,
+                           @Qualifier("jdbcUserRepository") UserRepository userRepository) {
+        this.filmRepository = filmRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public Collection<Film> findAll() {
@@ -40,12 +41,6 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Film create(Film type) {
         log.info("Запрос на создание фильма.");
-        type.setId(idF++);
-
-        if (filmRepository.existsById(type.getId())) {
-            throw new MyAppException("400", String.format("Фильм с id %d уже есть в базе.", type.getId()),
-                    HttpStatus.BAD_REQUEST);
-        }
         return filmRepository.create(type);
     }
 
@@ -53,6 +48,7 @@ public class FilmServiceImpl implements FilmService {
     public Film update(Film type) {
         log.info("Запрос на обновление фильма.");
         checkFilmById(type.getId());
+        log.info("фильм с id - {} обновлен.", type.getId());
         return filmRepository.update(type);
     }
 
@@ -60,13 +56,13 @@ public class FilmServiceImpl implements FilmService {
     public void delete(Long id) {
         log.info("Запрос на удаление фильма.");
         checkFilmById(id);
+        log.info("фильм с id - {} удален.", id);
         filmRepository.delete(id);
     }
 
     @Override
     public void addLike(Long id, Long userId) {
         log.info("Запрос на добавление лайка.");
-        checkPathVarsForNull(id, userId);
         checkFilmById(id);
         checkUserById(userId);
         filmRepository.addLike(id, userId);
@@ -76,11 +72,10 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public void deleteLike(Long id, Long userId) {
         log.info("Запрос на удаление лайка.");
-        checkPathVarsForNull(id, userId);
         checkFilmById(id);
         checkUserById(userId);
         filmRepository.deleteLike(id, userId);
-        log.info("Пользователь с id {} удалил лайк фильму с id {}.", userId, id);
+        log.info("Пользователя с id-{}  удалил лайк фильму с id-{}.", userId, id);
     }
 
     @Override
@@ -89,24 +84,17 @@ public class FilmServiceImpl implements FilmService {
         return filmRepository.findFirstCountFilms(count);
     }
 
-    private void checkFilmById(Long... ids) {
-        for (Long id : ids) {
-            if (!filmRepository.existsById(id)) {
-                throw new MyAppException("404", String.format("Фильм с id %d не найден.", id),
-                        HttpStatus.NOT_FOUND);
-            }
+    private void checkFilmById(Long id) {
+        if (!filmRepository.existsById(id)) {
+            throw new MyAppException("404", String.format("Фильм с id %d или не найден.", id),
+                    HttpStatus.NOT_FOUND);
         }
     }
 
-    private void checkUserById(Long... ids) {
-            userService.checkUserById(ids);
-    }
-
-    private void checkPathVarsForNull(Long... pathVars) {
-        boolean res = Arrays.stream(pathVars).allMatch(Objects::nonNull);
-        if (!res) {
-            throw new MyAppException("400", String.format("Переменные пути не могут быть пустыми."),
-                    HttpStatus.BAD_REQUEST);
+    private void checkUserById(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new MyAppException("404", String.format("Пользователь с id %d или не найден.", id),
+                    HttpStatus.NOT_FOUND);
         }
     }
 }

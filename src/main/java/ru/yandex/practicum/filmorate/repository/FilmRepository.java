@@ -10,4 +10,6 @@ public interface FilmRepository extends CrudRepository<Film> {
     void deleteLike(Long idFilm, Long userId);
 
     List<Film> findFirstCountFilms(Integer count);
+
+    boolean existsById(Long id);
 }
